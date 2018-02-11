@@ -11,12 +11,12 @@ namespace PetAPI.Controllers
     [Produces("application/json")]
     //[Route("api/PetAPI")]
     [Route("api/[controller]/[action]")]
-    public class PetAPIController : Controller
+    public class PetAPIController:Controller
     {
-        public List<LostVM> GetSampleLostData()
-        {
-            List<LostVM> lostAnimals = new List<LostVM>();
-            lostAnimals.Add(new LostVM()
+
+        public List<LostVM> lostAnimals = new List<LostVM>()
+       {
+           new LostVM()
             {
                 AnimalType = "Dog",
                 DateLost = new DateTime(2018, 1, 9),
@@ -25,8 +25,8 @@ namespace PetAPI.Controllers
                 Sex = "Male",
                 Age = 4,
                 Temperament = "Aggressive"
-            });
-            lostAnimals.Add(new LostVM()
+            },
+            new LostVM()
             {
                 AnimalType = "Cat",
                 DateLost = new DateTime(2018, 2, 9),
@@ -35,8 +35,8 @@ namespace PetAPI.Controllers
                 Sex = "Female",
                 Age = 0.5,
                 Temperament = "Shy"
-            });
-            lostAnimals.Add(new LostVM()
+            },
+            new LostVM()
             {
                 AnimalType = "Cat",
                 DateLost = new DateTime(2017, 12, 9),
@@ -45,8 +45,8 @@ namespace PetAPI.Controllers
                 Sex = "Male",
                 Age = 2,
                 Temperament = "Aggressive"
-            });
-            lostAnimals.Add(new LostVM()
+            },
+            new LostVM()
             {
                 AnimalType = "Dog",
                 DateLost = new DateTime(2016, 3, 28),
@@ -55,10 +55,9 @@ namespace PetAPI.Controllers
                 Sex = "Female",
                 Age = 7,
                 Temperament = "Shy"
-            });
+            }
 
-            return lostAnimals;
-        }
+       };
 
         public List<FoundVM> GetSampleFoundData()
         {
@@ -119,7 +118,7 @@ namespace PetAPI.Controllers
         [HttpGet]
         public IEnumerable<LostVM> GetAllLost()
         {
-            return GetSampleLostData();
+            return lostAnimals;
         }
 
         public IActionResult Index()
@@ -142,7 +141,7 @@ namespace PetAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateLostPet(LostVM model)
+        public IActionResult CreateLostPet([FromBody]LostVM model)
         {
             if (ModelState.IsValid)
             {
@@ -156,8 +155,9 @@ namespace PetAPI.Controllers
                     Age = model.Age,
                     Temperament = model.Temperament
                 };
-
-                GetSampleLostData().Add(newDog);
+                Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
+                lostAnimals.Add(newDog);
+                Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
                 return Ok();
 
             };
