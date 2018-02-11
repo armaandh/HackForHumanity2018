@@ -16,6 +16,29 @@ namespace PetBot.Dialogs
         {
             await context.PostAsync("We will need some info on the animal you just found.");
 
+            var foundAnimalFormDialog = FormDialog.FromForm(BuildFoundAnimalForm, FormOptions.PromptInStart);
+
+            context.Call(foundAnimalFormDialog, ResumeAfterFoundAnimalFormDialog);
+        }
+
+        private IForm<FoundQuery> BuildFoundAnimalForm()
+        {
+            OnCompletionAsyncDelegate<FoundQuery> processFoundReport = async (context, state) =>
+            {
+                // maybe show filled info on complete
+                await context.PostAsync("Report has been sent.");
+            };
+
+            return new FormBuilder<FoundQuery>()
+                .AddRemainingFields()
+                .OnCompletion(processFoundReport)
+                .Build();
+
+        }
+
+        private async Task ResumeAfterFoundAnimalFormDialog(IDialogContext context, IAwaitable<FoundQuery> result)
+        {
+            context.Done<object>(null);
         }
     }
 }
