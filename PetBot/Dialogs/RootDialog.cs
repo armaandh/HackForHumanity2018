@@ -2,51 +2,76 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System.Collections.Generic;
 
 namespace PetBot.Dialogs
 {
     [Serializable]
     public class RootDialog : IDialog<object>
     {
+        private const string LostOption = "Lost a Pet";
+
+        private const string FoundOption = "Found a Pet";
+
         public Task StartAsync(IDialogContext context)
         {
-            // --------------#2----------------
-            // We say that every message will get sent to the MessageReceivedAsync method
+            
             context.Wait(MessageReceivedAsync);
 
             return Task.CompletedTask;
         }
 
-        private Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        private Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            // --------------#3----------------
-            // var activity = await result as Activity;
-
-            PromptDialog.Text(context, NameEntered, @"Hi! What's your name");
-            return Task.CompletedTask;
-            // context contains the dialog stack
-            // NameEntered is the callback we are sending it to ONCE THE USER REPLIES
-            // 3rd param is the prompt
-            
+            ShowOptions(context);
+            return Task.CompletedTask; // might be problematic
         }
 
-        private async Task NameEntered(IDialogContext context, IAwaitable<string> result)
+        private void ShowOptions(IDialogContext context)
         {
-            // result is the users response (as a string). We wrap it in IAwaitable so we gotta use await on the following line
-            await context.PostAsync($@"Hi {await result}!"); // we use await at the beginning because PostAsync is asynchronous
-            // PostAsync method used to send messages back to user
+            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { LostOption, FoundOption }, "Are you looking for a lost pet or reporting one you found?", "Not a valid option", 3);
+        }
 
-            context.Wait(MessageReceivedAsync); // once we're done posting the msg back out, we say we'll wait for the next input to come back in to the MessageReceivedAsync method. That method will send us back here, creating a loop.
-            // context.Wait creates a 'loop' in this method saying the next message the user sends is gonna come back into this method (MessageReceivedAsync).
-            // So no matter what we send to the bot, he's going to keep replying back with You sent xxx which was xxx characters
+
+        private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                string optionSelected = await result;
+
+                switch (optionSelected)
+                {
+                    case LostOption:
+                        context.Call(new LostDialog(), this.ResumeAfterOptionDialog);
+                        break;
+
+                    case FoundOption:
+                        context.Call(new FoundDialog(), this.ResumeAfterOptionDialog);
+                        break;
+                }
+            }
+            catch (TooManyAttemptsException ex)
+            {
+                await context.PostAsync($"Too many attempts. Please try again");
+
+                context.Wait(this.MessageReceivedAsync);
+            }
+        }
+
+        private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
+        {
+            try
+            {
+                var message = await result;
+            }
+            catch (Exception ex)
+            {
+                await context.PostAsync($"Failed with message: {ex.Message}");
+            }
+            finally
+            {
+                context.Wait(this.MessageReceivedAsync);
+            }
         }
     }
 }
-
-/*Receiving information from the user
- * The initial message of the user is in the Activity.Text property(IMessageActivity.Text)
-*/
-
-/*Asking the user for information
-* Done through prompts. Ex: Text, Number, Choice: 
-*/
