@@ -33,7 +33,7 @@ namespace PetAPI.Controllers
                 Size = "Small",
                 Color = "White",
                 Sex = "Female",
-                Age = 0.5,
+                Age = 1,
                 Temperament = "Shy"
             },
             new LostVM()
