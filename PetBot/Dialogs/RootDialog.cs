@@ -42,11 +42,11 @@ namespace PetBot.Dialogs
                 switch (optionSelected)
                 {
                     case LostOption:
-                        context.Call(new LostDialog(), this.ResumeAfterOptionDialog);
+                        context.Call(new LostDialog(), ResumeAfterOptionDialog);
                         break;
 
                     case FoundOption:
-                        context.Call(new FoundDialog(), this.ResumeAfterOptionDialog);
+                        context.Call(new FoundDialog(), ResumeAfterOptionDialog);
                         break;
                 }
             }
