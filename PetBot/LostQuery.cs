@@ -9,6 +9,6 @@
 
         [Numeric(1, int.MaxValue)]
         [Prompt("How many {&} days back did you lose your dog?")]
-        public int Nights { get; set; }
+        public int Days { get; set; }
     }
 }

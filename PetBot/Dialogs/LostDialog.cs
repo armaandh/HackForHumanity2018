@@ -24,18 +24,18 @@ namespace PetBot.Dialogs
         {
             OnCompletionAsyncDelegate<LostQuery> processLostSearch = async (context, state) =>
             {
-                await context.PostAsync($"Ok. Searching for Dogs in {state.Destination} from {state.CheckIn.ToString("MM/dd")} to {state.CheckIn.AddDays(state.Nights).ToString("MM/dd")}...");
+                await context.PostAsync($"Ok. Searching for Dogs within the last {state.Days} days.");
             };
 
             return new FormBuilder<LostQuery>()
-                .Field(nameof(LostQuery.Destination))
-                .Message("Looking for Dogs in {Destination}...")
+                .Field(nameof(LostQuery.Days))
+                .Message("Looking for Dogs within the last {Days} days...")
                 .AddRemainingFields()
                 .OnCompletion(processLostSearch)
                 .Build();
         }
 
-        private async Task ResumeAfterHotelsFormDialog(IDialogContext context, IAwaitable<LostQuery> result)
+        private async Task ResumeAfterLostFormDialog(IDialogContext context, IAwaitable<LostQuery> result)
         {
             try
             {
@@ -53,10 +53,11 @@ namespace PetBot.Dialogs
                 {
                     HeroCard heroCard = new HeroCard()
                     {
-                        Title = dog.Name,
+                        Title = "Animal: " + dog.AnimalType,
+                        Subtitle = "Date Found:" + dog.DateFound,
                         Images = new List<CardImage>()
                         {
-                            new CardImage() { Url = dog.Image }
+                            new CardImage() { Url = "https://i.ebayimg.com/thumbs/images/g/ResAAOSwyjBW5pty/s-l200.jpg" }
                         },
                         Buttons = new List<CardAction>()
                         {
@@ -64,7 +65,7 @@ namespace PetBot.Dialogs
                             {
                                 Title = "More details",
                                 Type = ActionTypes.OpenUrl,
-                                Value = $"https://www.bing.com/search?q=hotels+in+" + HttpUtility.UrlEncode(hotel.Location)
+                                Value = $"http://petapihackforhumanity2018.azurewebsites.net/"
                             }
                         }
                     };
@@ -93,6 +94,30 @@ namespace PetBot.Dialogs
             {
                 context.Done<object>(null);
             }
+        }
+
+
+        private async Task<IEnumerable<Dog>> GetDogsAsync(LostQuery searchQuery)
+        {
+            var dogs = new List<Dog>();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                Dog dog = new Dog()
+                {
+                        AnimalType= "Dog",
+	                    DateFound = DateTime.Now,
+	                    Size= "Large",
+	                    Color = "White",
+	                    Sex= "Male",
+	                    Age= 5,
+	                    Temperament= "Aggressive"
+                };
+
+                dogs.Add(dog);
+            }
+
+            return dogs;
         }
     }
 }
