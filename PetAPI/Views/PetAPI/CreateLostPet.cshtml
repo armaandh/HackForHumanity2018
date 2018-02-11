@@ -1,0 +1,63 @@
+﻿@model PetAPI.Models.LostVM
+
+@{
+    ViewData["Title"] = "CreateLostPet";
+}
+
+<h2>CreateLostPet</h2>
+
+<h4>LostVM</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateLostPet">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AnimalType" class="control-label"></label>
+                <input asp-for="AnimalType" class="form-control" />
+                <span asp-validation-for="AnimalType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateLost" class="control-label"></label>
+                <input asp-for="DateLost" class="form-control" />
+                <span asp-validation-for="DateLost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input asp-for="Size" class="form-control" />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sex" class="control-label"></label>
+                <input asp-for="Sex" class="form-control" />
+                <span asp-validation-for="Sex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Temperament" class="control-label"></label>
+                <input asp-for="Temperament" class="form-control" />
+                <span asp-validation-for="Temperament" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

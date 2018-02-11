@@ -14,8 +14,8 @@ namespace PetAPI.Controllers
     public class PetAPIController:Controller
     {
 
-        public List<LostVM> lostAnimals = new List<LostVM>()
-       {
+        public List<LostVM> lostPets = new List<LostVM>()
+        {
            new LostVM()
             {
                 AnimalType = "Dog",
@@ -33,7 +33,7 @@ namespace PetAPI.Controllers
                 Size = "Small",
                 Color = "White",
                 Sex = "Female",
-                Age = 0.5,
+                Age = 1,
                 Temperament = "Shy"
             },
             new LostVM()
@@ -58,90 +58,83 @@ namespace PetAPI.Controllers
             }
 
        };
-
-        public List<FoundVM> GetSampleFoundData()
+  
+        List<FoundVM> foundPets = new List<FoundVM>()
         {
-            List<FoundVM> foundAnimals = new List<FoundVM>();
-            foundAnimals.Add(new FoundVM()
+            new FoundVM()
             {
                 AnimalType = "Cat",
                 DateFound = new DateTime(2016, 10, 9),
                 Size = "Medium",
                 Color = "White",
                 Sex = "Male"
-            });
-            foundAnimals.Add(new FoundVM()
+            },
+            new FoundVM()
             {
                 AnimalType = "Cat",
                 DateFound = new DateTime(2017, 5, 19),
                 Size = "Medium",
                 Color = "Black",
                 Sex = "Male"
-            });
-            foundAnimals.Add(new FoundVM()
+            },
+            new FoundVM()
             {
                 AnimalType = "Cat",
                 DateFound = new DateTime(2017, 2, 24),
                 Size = "Large",
                 Color = "White",
                 Sex = "Female"
-            });
-            foundAnimals.Add(new FoundVM()
+            },
+            new FoundVM()
             {
                 AnimalType = "Dog",
                 DateFound = new DateTime(2017, 8, 10),
                 Size = "Large",
                 Color = "White",
                 Sex = "Male"
-            });
-            foundAnimals.Add(new FoundVM()
+            },
+            new FoundVM()
             {
                 AnimalType = "Dog",
                 DateFound = new DateTime(2017, 12, 12),
                 Size = "Medium",
                 Color = "Black",
                 Sex = "Female"
-            });
-            foundAnimals.Add(new FoundVM()
+            },
+            new FoundVM()
             {
                 AnimalType = "Dog",
                 DateFound = new DateTime(2017, 7, 31),
                 Size = "Medium",
                 Color = "Dark Brown",
                 Sex = "Female"
-            });
-
-
-            return foundAnimals;
-        }
-
+            }
+        };
+            
         [HttpGet]
-        public IEnumerable<LostVM> GetAllLost()
+        public IEnumerable<LostVM> GetAllLostPets()
         {
-            return lostAnimals;
+            return lostPets;
         }
 
         public IActionResult Index()
         {
-
-            return View(GetAllLost());
+            return View(GetAllLostPets());
         }
 
-        
         [HttpGet]
-        public IEnumerable<FoundVM> GetAllFound()
+        public IEnumerable<FoundVM> GetAllFoundPets()
         {
-            return GetSampleFoundData();
+            return foundPets;
         }
 
-        public IActionResult DisplayFound()
+        public IActionResult DisplayFoundPets()
         {
-
-            return View(GetAllFound());
+            return View(GetAllFoundPets());
         }
 
         [HttpPost]
-        public IActionResult CreateLostPet([FromBody]LostVM model)
+        public IActionResult CreateLostPet([FromBody] LostVM model)
         {
             if (ModelState.IsValid)
             {
@@ -155,13 +148,34 @@ namespace PetAPI.Controllers
                     Age = model.Age,
                     Temperament = model.Temperament
                 };
-                Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
-                lostAnimals.Add(newDog);
-                Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
+                //Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
+                lostPets.Add(newDog);
+                //Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
                 return Ok();
-
             };
             
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public IActionResult CreateFoundPet([FromBody] FoundVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                FoundVM newDog = new FoundVM
+                {
+                    AnimalType = model.AnimalType,
+                    DateFound = model.DateFound,
+                    Size = model.Size,
+                    Color = model.Color,
+                    Sex = model.Sex
+                };
+                //Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
+                foundPets.Add(newDog);
+                //Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
+                return Ok();
+            };
+
             return BadRequest();
         }
     }

@@ -12,7 +12,7 @@ namespace PetAPI.Models
         public string Size { get; set; }
         public string Color { get; set; }
         public string Sex { get; set; }
-        public double Age { get; set; }
+        public int Age { get; set; }
         public string Temperament { get; set; }
     }
 }
