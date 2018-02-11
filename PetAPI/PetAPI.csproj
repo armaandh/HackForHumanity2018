@@ -4,9 +4,6 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-PetAPI-286AF6A3-42EE-43CE-B408-DBE58F0E517B</UserSecretsId>
   </PropertyGroup>
-  <ItemGroup>
-    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
