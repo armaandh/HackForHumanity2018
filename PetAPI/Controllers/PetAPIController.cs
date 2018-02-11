@@ -148,9 +148,7 @@ namespace PetAPI.Controllers
                     Age = model.Age,
                     Temperament = model.Temperament
                 };
-                //Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
                 lostPets.Add(newDog);
-                //Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
                 return Ok();
             };
             
@@ -170,9 +168,7 @@ namespace PetAPI.Controllers
                     Color = model.Color,
                     Sex = model.Sex
                 };
-                //Console.WriteLine("lostAnimals size: " + lostAnimals.Count);
                 foundPets.Add(newDog);
-                //Console.WriteLine("lostAnimals size after add: " + lostAnimals.Count);
                 return Ok();
             };
 
