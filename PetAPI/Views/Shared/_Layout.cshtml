@@ -31,11 +31,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="PetAPI" asp-action="Index">Display Listing</a></li>
+
+                    <li><a asp-area="" asp-controller="PetAPI" asp-action="Index">Display Listing of Lost Pets</a></li>
+                    <li><a asp-area="" asp-controller="PetAPI" asp-action="DisplayFound">Display Listing of Found Pets</a></li>
                 </ul>
-                @await Html.PartialAsync("_LoginPartial")
+                @*@await Html.PartialAsync("_LoginPartial")*@
             </div>
         </div>
     </nav>
