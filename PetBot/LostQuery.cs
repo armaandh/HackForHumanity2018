@@ -8,7 +8,7 @@
     {
 
         [Numeric(1, int.MaxValue)]
-        [Prompt("How many {&} days back did you lose your dog?")]
+        [Prompt("How many days back did you lose your dog?")]
         public int Days { get; set; }
     }
 }

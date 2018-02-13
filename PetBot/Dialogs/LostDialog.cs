@@ -6,6 +6,7 @@ using System.Web;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
+using PetBot.Services;
 
 namespace PetBot.Dialogs
 {
@@ -41,7 +42,7 @@ namespace PetBot.Dialogs
             {
                 var searchQuery = await result;
 
-                var dogs = await this.GetDogsAsync(searchQuery);
+                var dogs = await GetDogsAsync(searchQuery);
 
                 await context.PostAsync($"I found in total {dogs.Count()} dogs for you:");
 
@@ -51,16 +52,22 @@ namespace PetBot.Dialogs
 
                 foreach (var dog in dogs)
                 {
-                    HeroCard heroCard = new HeroCard()
+                    ThumbnailCard dogCard = new ThumbnailCard()
                     {
-                        Title = "Animal: " + dog.AnimalType,
-                        Subtitle = "Date Found:" + dog.DateFound,
+                        Title = $"Animal:  {dog.AnimalType}",
+                        Subtitle = $"Date Found - {String.Format("{0:g}", dog.DateFound)} {Environment.NewLine} Color - {dog.Color} {Environment.NewLine} Gender - {dog.Sex}",
                         Images = new List<CardImage>()
                         {
                             new CardImage() { Url = "https://i.ebayimg.com/thumbs/images/g/ResAAOSwyjBW5pty/s-l200.jpg" }
                         },
                         Buttons = new List<CardAction>()
                         {
+                            new CardAction()
+                            {
+                                Title = "Claim Dog",
+                                Type = ActionTypes.OpenUrl,
+                                Value = $"http://petapihackforhumanity2018.azurewebsites.net/"
+                            },
                             new CardAction()
                             {
                                 Title = "More details",
@@ -70,7 +77,7 @@ namespace PetBot.Dialogs
                         }
                     };
 
-                    resultMessage.Attachments.Add(heroCard.ToAttachment());
+                    resultMessage.Attachments.Add(dogCard.ToAttachment());
                 }
 
                 await context.PostAsync(resultMessage);
@@ -96,22 +103,20 @@ namespace PetBot.Dialogs
             }
         }
 
-
         private async Task<IEnumerable<Dog>> GetDogsAsync(LostQuery searchQuery)
         {
+            var dg = await PetService.GetFoundDogs();
             var dogs = new List<Dog>();
 
-            for (int i = 1; i <= 5; i++)
+            for (var i = 0; i < dg.Count; i++)
             {
                 Dog dog = new Dog()
                 {
-                        AnimalType= "Dog",
-	                    DateFound = DateTime.Now,
-	                    Size= "Large",
-	                    Color = "White",
-	                    Sex= "Male",
-	                    Age= 5,
-	                    Temperament= "Aggressive"
+                        AnimalType= dg[i].AnimalType,
+	                    DateFound = dg[i].DateFound,
+	                    Size= dg[i].Size,
+	                    Color = dg[i].Color,
+	                    Sex= dg[i].Sex,
                 };
 
                 dogs.Add(dog);
